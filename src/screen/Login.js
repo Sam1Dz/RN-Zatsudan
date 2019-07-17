@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Platform, StyleSheet, View, Image } from 'react-native';
 import { Container, Form, Item, Label, Input, Button, Text } from 'native-base'
 
-export default class App extends Component {
+export default class Login extends Component {
 	render() {
 		return (
 			<Container>
