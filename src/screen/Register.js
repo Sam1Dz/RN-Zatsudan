@@ -1,22 +1,57 @@
 import React, { Component } from 'react';
-import { AsyncStorage, Platform, StyleSheet, View, Image, StatusBar } from 'react-native';
+import { AsyncStorage, Platform, StyleSheet, View, Image, StatusBar, Alert, ActivityIndicator } from 'react-native';
 import { Container, Form, Item, Label, Input, Button, Text, Content } from 'native-base'
 
-import { db } from '../config';
+import { Database, Auth } from '../Config';
 import User from '../User'
 
 export default class Register extends Component {
 	state = {
 		name: '',
 		email: '',
-		password: ''
+		password: '',
+		refreshing: false
 	};
 
-	register = async () => {
-		await AsyncStorage.setItem('userEmail', this.state.email);
-		User.name = this.state.name;
-		User.email = this.state.email;
-		this.props.navigation.navigate('App');
+	register = () => {
+		this.setState({refreshing: true});
+		
+		if (this.state.name == '' && this.state.email == '' && this.state.password == '') {
+			alert('Harap mengisi Semua Form!')
+			this.setState({refreshing: false});
+		} else {
+			Auth.createUserWithEmailAndPassword(this.state.email, this.state.password)
+			.then(() => {
+				Database.ref('/users/').push({
+					name: this.state.name,
+					status: 'Ada',
+					email: this.state.email,
+					phone: '-',
+					photo: ''
+				});
+
+				let data = {
+					name: this.state.name,
+					status: 'Ada',
+					email: this.state.email,
+					phone: '-',
+					photo: ''
+				}
+
+				this.setState({refreshing: false});
+				AsyncStorage.setItem('user', JSON.stringify(data));
+				this.props.navigation.navigate('Loading')
+			})
+			.catch(error => { 
+				alert(error.message)
+				this.setState({
+					name: '',
+					email: '',
+					password: '',
+					refreshing: false
+				});
+			})
+		}
 	};
 
 	render() {
@@ -29,28 +64,35 @@ export default class Register extends Component {
 					<View style={{alignItems: 'center', marginTop: 50, marginBottom: 25}}>
 						<Image source={require('../img/zatsudan_logo_white.png')} style={styles.logo}/>
 					</View>
-				
-					<View>
-						<Form>
-							<Item rounded style={{backgroundColor: '#FFFFFF', paddingLeft: 10, marginRight: 5, marginLeft: 5, marginBottom: 10, elevation: 3}}>
-								<Input placeholder='Nama' onChangeText={(name) => this.setState({name})} />
-							</Item>
-							<Item rounded style={{backgroundColor: '#FFFFFF', paddingLeft: 10, marginRight: 5, marginLeft: 5, marginBottom: 10, elevation: 3}}>
-								<Input placeholder='Email' onChangeText={(email) => this.setState({email})} />
-							</Item>
-							<Item rounded style={{backgroundColor: '#FFFFFF', paddingLeft: 10, marginRight: 5, marginLeft: 5, marginBottom: 10, elevation: 3}}>
-								<Input secureTextEntry={true} placeholder='Password' onChangeText={(password) => this.setState({password})} />
-							</Item>
-						</Form>
-						<Text style={{textAlign: 'center', fontWeight: 'bold', marginBottom: 10, color: 'white'}}>----------</Text>
-						<Button block rounded success style={{marginRight: 5, marginLeft: 5, marginBottom: 10}} onPress={this.register}>
-							<Text>Daftar</Text>
-						</Button>
-						<View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-							<Text style={{color: 'white'}}>Sudah punya akun? </Text>
-							<Text style={{color: '#96BCDE'}} onPress={() => {this.props.navigation.pop()}}>Masuk</Text>
-						</View>
-					</View>
+					
+					{
+						this.state.refreshing == true ?
+						<ActivityIndicator size="large" color="#FFFFFF" />
+						:
+						(
+							<View>
+								<Form>
+									<Item rounded style={{backgroundColor: '#FFFFFF', paddingLeft: 10, marginRight: 5, marginLeft: 5, marginBottom: 10, elevation: 3}}>
+										<Input placeholder='Nama' onChangeText={(name) => this.setState({name})} />
+									</Item>
+									<Item rounded style={{backgroundColor: '#FFFFFF', paddingLeft: 10, marginRight: 5, marginLeft: 5, marginBottom: 10, elevation: 3}}>
+										<Input placeholder='Email' onChangeText={(email) => this.setState({email})} />
+									</Item>
+									<Item rounded style={{backgroundColor: '#FFFFFF', paddingLeft: 10, marginRight: 5, marginLeft: 5, marginBottom: 10, elevation: 3}}>
+										<Input secureTextEntry={true} placeholder='Password' onChangeText={(password) => this.setState({password})} />
+									</Item>
+								</Form>
+								<Text style={{textAlign: 'center', fontWeight: 'bold', marginBottom: 10, color: 'white'}}>----------</Text>
+								<Button block rounded success style={{marginRight: 5, marginLeft: 5, marginBottom: 10}} onPress={this.register}>
+									<Text>Daftar</Text>
+								</Button>
+								<View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+									<Text style={{color: 'white'}}>Sudah punya akun? </Text>
+									<Text style={{color: '#96BCDE'}} onPress={() => {this.props.navigation.pop()}}>Masuk</Text>
+								</View>
+							</View>
+						)
+					}
 				
 				</Content>
 			</Container>

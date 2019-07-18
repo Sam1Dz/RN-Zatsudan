@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, Image, StatusBar, AsyncStorage, Alert } from 'react-native';
+import { StyleSheet, Text, View, Image, StatusBar, AsyncStorage, Alert } from 'react-native';
 import { Container, Content, Header, Card, CardItem, Body, Title, Button, Right } from 'native-base';
 
+import { Auth } from '../Config';
+
 export default class Profile extends Component {
-	_logOut = async () => {
-		await AsyncStorage.clear();
-		this.props.navigation.navigate('Loading');
+	_logOut = () => {
+		Auth.signOut().then(() => {
+			AsyncStorage.clear();
+			this.props.navigation.navigate('Loading');
+		}).catch(error => { alert( error.message ) } )
 	};
 
 	render() {

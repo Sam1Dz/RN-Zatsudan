@@ -8,7 +8,7 @@ import RegisterScreen from '../../screen/Register';
 import ChatListScreen from '../../screen/ChatList';
 import MapsScreen from '../../screen/Maps';
 import ProfileScreen from '../../screen/Profile';
-import AuthScreen from '../../screen/Auth';
+import LoadingScreen from '../../screen/Loading';
 
 const AuthStack = createStackNavigator(
 	{
@@ -52,7 +52,7 @@ const BottomNavigation = createMaterialBottomTabNavigator(
 
 export default createAppContainer(createSwitchNavigator(
 	{
-		Loading: AuthScreen,
+		Loading: LoadingScreen,
 		Auth: AuthStack,
 		App: BottomNavigation
 	}, {
