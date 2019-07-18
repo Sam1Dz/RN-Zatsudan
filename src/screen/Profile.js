@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, Image } from 'react-native';
+import { Platform, StyleSheet, Text, View, Image, StatusBar, AsyncStorage, Alert } from 'react-native';
 import { Container, Content, Header, Card, CardItem, Body, Title, Button, Right } from 'native-base';
 
 export default class Profile extends Component {
+	_logOut = async () => {
+		await AsyncStorage.clear();
+		this.props.navigation.navigate('Loading');
+	};
+
 	render() {
 		return (
 			<Container>
@@ -17,6 +22,8 @@ export default class Profile extends Component {
 					</Right>
 				</Header>
 				<Content>
+
+					<StatusBar backgroundColor="#2E79BE" barStyle="light-content"/>
 					
 					<View style={{alignItems: 'center', marginTop: 10, marginBottom: 10}}>
 						<Image source={require('../img/pp_example.jpg')} style={{height: 128, width: 128, borderRadius: 100}}/>
@@ -38,7 +45,7 @@ export default class Profile extends Component {
                 		</Card>
 					</View>
 
-					<Button block danger style={{marginRight: 5, marginLeft: 5}}>
+					<Button block danger style={{marginRight: 5, marginLeft: 5}} onPress={this._logOut}>
 						<Text style={{color: '#FFFFFF', fontWeight: 'bold'}}>Keluar</Text>
 					</Button>
 

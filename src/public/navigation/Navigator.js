@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Image } from 'react-native';
-import { createStackNavigator, createAppContainer } from 'react-navigation';
+import { createStackNavigator, createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 
 import LoginScreen from '../../screen/Login';
@@ -8,14 +8,12 @@ import RegisterScreen from '../../screen/Register';
 import ChatListScreen from '../../screen/ChatList';
 import MapsScreen from '../../screen/Maps';
 import ProfileScreen from '../../screen/Profile';
+import AuthScreen from '../../screen/Auth';
 
-const RootNavigator = createStackNavigator(
+const AuthStack = createStackNavigator(
 	{
 		Login: {screen: LoginScreen},
-		Register: {screen: RegisterScreen},
-		Chat: {screen: ChatListScreen},
-		Maps: {screen: MapsScreen},
-		Profil: {screen: ProfileScreen}
+		Register: {screen: RegisterScreen}
 	}, {
 		headerMode: 'none'
 	}
@@ -52,4 +50,12 @@ const BottomNavigation = createMaterialBottomTabNavigator(
 	}
 );
 
-export default createAppContainer(RootNavigator);
+export default createAppContainer(createSwitchNavigator(
+	{
+		Loading: AuthScreen,
+		Auth: AuthStack,
+		App: BottomNavigation
+	}, {
+		initialRouteName: 'Loading'
+	}
+));
