@@ -6,6 +6,7 @@ import { createMaterialBottomTabNavigator } from 'react-navigation-material-bott
 import LoginScreen from '../../screen/Login';
 import RegisterScreen from '../../screen/Register';
 import ChatListScreen from '../../screen/ChatList';
+import ChatRoomScreen from '../../screen/ChatRoom';
 import MapsScreen from '../../screen/Maps';
 import ProfileScreen from '../../screen/Profile';
 import LoadingScreen from '../../screen/Loading';
@@ -50,11 +51,20 @@ const BottomNavigation = createMaterialBottomTabNavigator(
 	}
 );
 
+const AppStack = createStackNavigator(
+	{
+		Home: {screen: BottomNavigation},
+		ChatRoom: {screen: ChatRoomScreen},
+	}, {
+		headerMode: 'none'
+	}
+)
+
 export default createAppContainer(createSwitchNavigator(
 	{
 		Loading: LoadingScreen,
 		Auth: AuthStack,
-		App: BottomNavigation
+		App: AppStack
 	}, {
 		initialRouteName: 'Loading'
 	}
