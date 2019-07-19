@@ -5,10 +5,34 @@ import { Container, Content, Header, Card, CardItem, Body, Title, Button, Right 
 import { Auth } from '../Config';
 
 export default class Profile extends Component {
+	state = {
+		name: '',
+		email: '',
+		phone: '',
+		status: '',
+		photo: '',
+	};
+
+	constructor(props) {
+		super(props);
+		AsyncStorage.getItem('user', (error, result) => {
+			if (result) {
+				let resultParsed = JSON.parse(result)
+				this.setState({
+					name: resultParsed.name,
+					email: resultParsed.email,
+					phone: resultParsed.phone,
+					status: resultParsed.status,
+					photo: resultParsed.photo
+				});
+			}
+		});
+	}
+
 	_logOut = () => {
 		Auth.signOut().then(() => {
 			AsyncStorage.clear();
-			this.props.navigation.navigate('Loading');
+			this.props.navigation.navigate('Auth');
 		}).catch(error => { alert( error.message ) } )
 	};
 
@@ -30,8 +54,8 @@ export default class Profile extends Component {
 					<StatusBar backgroundColor="#2E79BE" barStyle="light-content"/>
 					
 					<View style={{alignItems: 'center', marginTop: 10, marginBottom: 10}}>
-						<Image source={require('../img/pp_example.jpg')} style={{height: 128, width: 128, borderRadius: 100}}/>
-						<Text style={{marginTop: 10, color: 'black', fontSize: 20, fontWeight: 'bold'}}>Pratama Dimas</Text>
+						<Image source={{uri: this.state.photo}} style={{height: 128, width: 128, borderRadius: 100}}/>
+						<Text style={{marginTop: 10, color: 'black', fontSize: 20, fontWeight: 'bold'}}>{this.state.name}</Text>
 					</View>
 
 					<View style={{marginLeft: 5, marginRight: 5, marginBottom: 10}}>
@@ -39,11 +63,11 @@ export default class Profile extends Component {
 							<CardItem>
 								<Body>
 									<Text style={{fontWeight: 'bold', fontSize: 15}}>Status</Text>
-                					<Text style={{fontSize: 12.5, marginBottom: 10}}>勉強します、まだ忙しい。</Text>
+                					<Text style={{fontSize: 12.5, marginBottom: 10}}>{this.state.status}</Text>
                 					<Text style={{fontWeight: 'bold', fontSize: 15}}>Email</Text>
-                					<Text style={{fontSize: 12.5, marginBottom: 10}}>dimasgamers01@gmail.com</Text>
+                					<Text style={{fontSize: 12.5, marginBottom: 10}}>{this.state.email}</Text>
                 					<Text style={{fontWeight: 'bold', fontSize: 15}}>Telepon</Text>
-                					<Text style={{fontSize: 12.5}}>+6285102569534</Text>
+                					<Text style={{fontSize: 12.5}}>{this.state.phone}</Text>
                 				</Body>
                 			</CardItem>
                 		</Card>

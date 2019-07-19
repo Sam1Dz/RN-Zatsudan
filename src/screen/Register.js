@@ -3,7 +3,6 @@ import { AsyncStorage, Platform, StyleSheet, View, Image, StatusBar, Alert, Acti
 import { Container, Form, Item, Label, Input, Button, Text, Content } from 'native-base'
 
 import { Database, Auth } from '../Config';
-import User from '../User'
 
 export default class Register extends Component {
 	state = {
@@ -13,7 +12,7 @@ export default class Register extends Component {
 		refreshing: false
 	};
 
-	register = () => {
+	_register = () => {
 		this.setState({refreshing: true});
 		
 		if (this.state.name == '' && this.state.email == '' && this.state.password == '') {
@@ -27,7 +26,7 @@ export default class Register extends Component {
 					status: 'Ada',
 					email: this.state.email,
 					phone: '-',
-					photo: ''
+					photo: 'https://i.imgur.com/zpjUVPT.png'
 				});
 
 				let data = {
@@ -35,12 +34,12 @@ export default class Register extends Component {
 					status: 'Ada',
 					email: this.state.email,
 					phone: '-',
-					photo: ''
+					photo: 'https://i.imgur.com/zpjUVPT.png'
 				}
 
 				this.setState({refreshing: false});
 				AsyncStorage.setItem('user', JSON.stringify(data));
-				this.props.navigation.navigate('Loading')
+				this.props.navigation.navigate('App')
 			})
 			.catch(error => { 
 				alert(error.message)
@@ -83,7 +82,7 @@ export default class Register extends Component {
 									</Item>
 								</Form>
 								<Text style={{textAlign: 'center', fontWeight: 'bold', marginBottom: 10, color: 'white'}}>----------</Text>
-								<Button block rounded success style={{marginRight: 5, marginLeft: 5, marginBottom: 10}} onPress={this.register}>
+								<Button block rounded success style={{marginRight: 5, marginLeft: 5, marginBottom: 10}} onPress={this._register}>
 									<Text>Daftar</Text>
 								</Button>
 								<View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
