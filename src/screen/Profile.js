@@ -44,7 +44,7 @@ export default class Profile extends Component {
 						<Title>Profil</Title>
 					</Body>
 					<Right>
-						<Button transparent>
+						<Button transparent onPress={() => this.props.navigation.navigate('EditProfile')}>
 							<Image source={require('../img/edit_icon.png')} style={{height: 20, width: 20}}/>
 						</Button>
 					</Right>

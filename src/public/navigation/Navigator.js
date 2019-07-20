@@ -9,6 +9,8 @@ import ChatListScreen from '../../screen/ChatList';
 import ChatRoomScreen from '../../screen/ChatRoom';
 import MapsScreen from '../../screen/Maps';
 import ProfileScreen from '../../screen/Profile';
+import OthersProfileScreen from '../../screen/OthersProfile';
+import EditProfileScreen from '../../screen/EditProfile';
 import LoadingScreen from '../../screen/Loading';
 
 const AuthStack = createStackNavigator(
@@ -23,7 +25,6 @@ const AuthStack = createStackNavigator(
 const BottomNavigation = createMaterialBottomTabNavigator(
 	{
 		Chat: {screen: ChatListScreen},
-		Maps: {screen: MapsScreen},
 		Profil: {screen: ProfileScreen}
 	}, {
 		defaultNavigationOptions: ({navigation}) => ({
@@ -55,6 +56,8 @@ const AppStack = createStackNavigator(
 	{
 		Home: {screen: BottomNavigation},
 		ChatRoom: {screen: ChatRoomScreen},
+		OthersProfile: {screen: OthersProfileScreen},
+		EditProfile: {screen: EditProfileScreen}
 	}, {
 		headerMode: 'none'
 	}

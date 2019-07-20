@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Platform, StyleSheet, View, StatusBar, FlatList, SaveAreaView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { Container, Content, Header, Body, Title, ListItem, Left, Right, Thumbnail, Text } from 'native-base';
 
-import { Database } from '../Config'
+import { Database, Auth } from '../Config'
 
 export default class ChatList extends Component {
 	state = {
@@ -15,12 +15,14 @@ export default class ChatList extends Component {
 		Database.ref('users').on('child_added', (data) => {
 			let person = data.val();
 			person.id = data.key;
-			this.setState((prevData) => {
-				return {
-					users: [...prevData.users, person]
-				}
-			})
-			this.setState({refreshing: false});
+			if (person.id != Auth.currentUser.uid) {
+				this.setState((prevData) => {
+					return {
+						users: [...prevData.users, person]
+					}
+				})
+				this.setState({refreshing: false});
+			}
 		})
 	}
 
@@ -58,7 +60,7 @@ export default class ChatList extends Component {
 								<FlatList
 									data={this.state.users}
 									renderItem={this._renderItem}
-									keyExtractor={(item) => item.email}
+									keyExtractor={(item) => item.id}
 								/>
 							</View>
 						)

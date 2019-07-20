@@ -20,8 +20,8 @@ export default class Register extends Component {
 			this.setState({refreshing: false});
 		} else {
 			Auth.createUserWithEmailAndPassword(this.state.email, this.state.password)
-			.then(() => {
-				Database.ref('/users/').push({
+			.then((response) => {
+				Database.ref('/users/' + response.user.uid).set({
 					name: this.state.name,
 					status: 'Ada',
 					email: this.state.email,
